@@ -1,0 +1,11 @@
+{
+  "name": "marks-calculator-autograder",
+  "version": "1.0.0",
+  "description": "Autograded marks calculator assignment",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}

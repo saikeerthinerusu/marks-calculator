@@ -1,0 +1,75 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Calculates correct total
+      id: calculates-correct-total
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Calculates correct total
+        setup-command: npm install
+        command: npm test -- --runTestsByPath tests/calculator.test.js --testNamePattern="Calculates
+          correct total"
+        timeout: 10
+        max-score: 20
+    - name: Calculates correct percentage
+      id: calculates-correct-percentage
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Calculates correct percentage
+        setup-command: npm install
+        command: npm test -- --runTestsByPath tests/calculator.test.js --testNamePattern="Calculates
+          correct percentage"
+        timeout: 10
+        max-score: 25
+    - name: Determines Pass correctly
+      id: determines-pass-correctly
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Determines Pass correctly
+        setup-command: npm install
+        command: npm test -- --runTestsByPath tests/calculator.test.js --testNamePattern="Determines
+          Pass correctly"
+        timeout: 10
+        max-score: 20
+    - name: Determines Fail correctly
+      id: determines-fail-correctly
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Determines Fail correctly
+        setup-command: npm install
+        command: npm test -- --runTestsByPath tests/calculator.test.js --testNamePattern="Determines
+          Fail correctly"
+        timeout: 10
+        max-score: 20
+    - name: Rounds percentage correctly
+      id: rounds-percentage-correctly
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Rounds percentage correctly
+        setup-command: npm install
+        command: npm test -- --runTestsByPath tests/calculator.test.js --testNamePattern="Rounds
+          percentage correctly"
+        timeout: 10
+        max-score: 15
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        CALCULATES-CORRECT-TOTAL_RESULTS: "${{steps.calculates-correct-total.outputs.result}}"
+        CALCULATES-CORRECT-PERCENTAGE_RESULTS: "${{steps.calculates-correct-percentage.outputs.result}}"
+        DETERMINES-PASS-CORRECTLY_RESULTS: "${{steps.determines-pass-correctly.outputs.result}}"
+        DETERMINES-FAIL-CORRECTLY_RESULTS: "${{steps.determines-fail-correctly.outputs.result}}"
+        ROUNDS-PERCENTAGE-CORRECTLY_RESULTS: "${{steps.rounds-percentage-correctly.outputs.result}}"
+      with:
+        runners: calculates-correct-total,calculates-correct-percentage,determines-pass-correctly,determines-fail-correctly,rounds-percentage-correctly
